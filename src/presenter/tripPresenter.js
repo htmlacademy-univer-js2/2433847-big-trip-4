@@ -3,10 +3,12 @@ import TripView from '../view/tripView';
 import SorterView from '../view/sorterView';
 import RoutePointView from '../view/routePointView';
 import {render, replace} from '../framework/render';
+import EmptyRouteView from '../view/emptyRouteView';
 
 export default class TripPresenter {
-  constructor(route) {
+  constructor(route, filters) {
     this.route = route;
+    this.filters = filters;
   }
 
   #eventListComponent = new TripView();
@@ -45,8 +47,14 @@ export default class TripPresenter {
   init(container) {
     render(new SorterView(), container);
     render(this.#eventListComponent, container);
-    for (const routePoint of this.route.getPoints()) {
-      this.#renderRoutePoint(routePoint);
+    if (this.route.getPoints().length === 0) {
+      const noRouteMessage = new EmptyRouteView(this.filters.find((filter) => filter.checked).name);
+      render(noRouteMessage, this.#eventListComponent.element);
+    }
+    else {
+      for (const routePoint of this.route.getPoints()) {
+        this.#renderRoutePoint(routePoint);
+      }
     }
   }
 }
