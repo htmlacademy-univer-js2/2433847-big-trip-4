@@ -1,8 +1,8 @@
 import TripPresenter from './presenter/tripPresenter';
-import {render, RenderPosition} from './render';
 import FilterView from './view/filterView';
 import TripInfoView from './view/tripInfoView';
 import Route from './model/route';
+import {render, RenderPosition} from './framework/render';
 
 const header = document.querySelector('.trip-main');
 const tripFilters = document.querySelector('.trip-controls__filters');

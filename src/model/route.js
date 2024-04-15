@@ -2,16 +2,18 @@ import {generateRoutePoint} from '../mock/routePoint';
 
 export default class Route {
   constructor(points) {
-    this.points = points || [];
+    this.#points = points ?? [];
   }
 
+  #points = [];
+
   getPoints() {
-    return this.points;
+    return this.#points;
   }
 
   generatePoints(num) {
     for (let i = 0; i < num; i++) {
-      this.points.push(generateRoutePoint());
+      this.#points.push(generateRoutePoint());
     }
   }
 }

@@ -11,7 +11,7 @@ export class RoutePoint {
   }
 }
 
-export class RoutePointOptions {
+export class RoutePointOption {
   constructor(data) {
     this.id = data.id;
     this.type = data.type;
