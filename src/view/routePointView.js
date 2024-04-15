@@ -1,5 +1,5 @@
-import {createElement} from '../render';
 import {getFormattedDate, getFormattedDuration} from '../utils/utils';
+import AbstractView from '../framework/view/abstract-view';
 
 const routePointTemplate = (routePoint) => `<li class="trip-events__item">
     <div class="event">
@@ -39,23 +39,17 @@ const routePointTemplate = (routePoint) => `<li class="trip-events__item">
     </div>
 </li>`;
 
-export default class RoutePointView {
+export default class RoutePointView extends AbstractView {
   constructor(routePoint) {
+    super();
     this.routePoint = routePoint;
   }
 
-  getTemplate() {
+  setClickHandler(handler) {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', handler);
+  }
+
+  get template() {
     return routePointTemplate(this.routePoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

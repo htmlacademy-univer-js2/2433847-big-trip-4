@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const editFormTemplate = (routePoint) => `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -148,23 +148,21 @@ const editFormTemplate = (routePoint) => `<li class="trip-events__item">
     </form>
 </li>`;
 
-export default class EditFormView {
+export default class EditFormView extends AbstractView {
   constructor(routePoint) {
+    super();
     this.routePoint = routePoint;
   }
 
-  getTemplate() {
+  setSubmitHandler(handler) {
+    this.element.querySelector('form').addEventListener('submit', handler);
+  }
+
+  setClickHandler(handler) {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', handler);
+  }
+
+  get template() {
     return editFormTemplate(this.routePoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
