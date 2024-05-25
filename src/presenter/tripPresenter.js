@@ -1,60 +1,43 @@
-import EditFormView from '../view/editFormView';
-import TripView from '../view/tripView';
-import SorterView from '../view/sorterView';
-import RoutePointView from '../view/routePointView';
-import {render, replace} from '../framework/render';
+import PointPresenter from './pointPresenter';
+import {render} from '../framework/render';
 import EmptyRouteView from '../view/emptyRouteView';
+import SorterView from '../view/sorterView';
+import TripView from '../view/tripView';
 
 export default class TripPresenter {
-  constructor(route, filters) {
-    this.route = route;
+  constructor(container, points, filters) {
+    this._container = container;
+    this._points = points;
+    this._handlePointChange = this._handlePointChange.bind(this);
     this.filters = filters;
   }
 
-  #eventListComponent = new TripView();
-
-  #renderRoutePoint(routePoint) {
-    const routePointView = new RoutePointView(routePoint);
-    const editFormView = new EditFormView(routePoint);
-
-    let swapToRoutePoint = () => null;
-    const handleEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        swapToRoutePoint();
-      }
-    };
-    swapToRoutePoint = () => {
-      replace(routePointView, editFormView);
-      document.removeEventListener('keydown', handleEscKeyDown);
-    };
-    const swapToEditForm = () => {
-      replace(editFormView, routePointView);
-      document.addEventListener('keydown', handleEscKeyDown);
-    };
-
-    routePointView.setClickHandler(swapToEditForm);
-    editFormView.setSubmitHandler((e) => {
-      e.preventDefault();
-      swapToRoutePoint();
-    });
-
-    editFormView.setClickHandler(swapToRoutePoint);
-
-    render(routePointView, this.#eventListComponent.element);
+  resetViews() {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
-  init(container) {
-    render(new SorterView(), container);
-    render(this.#eventListComponent, container);
-    if (this.route.getPoints().length === 0) {
+  #pointPresenters = new Map();
+  #eventListComponent = new TripView();
+
+
+  init() {
+    render(new SorterView(), this._container);
+    render(this.#eventListComponent, this._container);
+
+    if (this._points.length === 0) {
       const noRouteMessage = new EmptyRouteView(this.filters.find((filter) => filter.checked).name);
       render(noRouteMessage, this.#eventListComponent.element);
+    } else {
+      this._points.forEach((point) => {
+        const pointPresenter = new PointPresenter(this.#eventListComponent.element, this._handlePointChange, this.resetViews.bind(this));
+        pointPresenter.init(point);
+        this.#pointPresenters.set(point.id, pointPresenter);
+      });
     }
-    else {
-      for (const routePoint of this.route.getPoints()) {
-        this.#renderRoutePoint(routePoint);
-      }
-    }
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._points = this._points.map((point) => (point.id === updatedPoint.id ? updatedPoint : point));
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 }

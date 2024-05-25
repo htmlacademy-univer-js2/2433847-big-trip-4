@@ -9,14 +9,14 @@ const header = document.querySelector('.trip-main');
 const tripFilters = document.querySelector('.trip-controls__filters');
 const tripEvents = document.querySelector('.trip-events');
 const route = new Route();
-route.generatePoints(3);
+route.generatePoints(4);
 const filters = [
   {name: 'Everything', checked: true},
   {name: 'Future', checked: false},
   {name: 'Present', checked: false},
   {name: 'Past', checked: false},
 ];
-const presenter = new TripPresenter(route, filters);
+const presenter = new TripPresenter(tripEvents, route.getPoints(), filters);
 
 const headerData = generateHeaderData();
 render(new TripInfoView(headerData), header, RenderPosition.AFTERBEGIN);
