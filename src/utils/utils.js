@@ -1,19 +1,23 @@
-export const getFormattedDuration = (timeFrom, timeTo) => {
-  const duration = timeTo - timeFrom;
-  const days = Math.floor(duration / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-  let result = '';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
+
+export const getFormattedDuration = (start, end) => {
+  const dur = dayjs.duration(dayjs(end).diff(dayjs(start)));
+  const days = dur.days();
+  const hours = dur.hours();
+  const minutes = dur.minutes();
+
   if (days > 0) {
-    result += `${days}D `;
-    result += `${hours}H `;
+    return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
   } else if (hours > 0) {
-    result += `${hours}H `;
+    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  } else {
+    return `${minutes}M`;
   }
-  result += `${minutes}M`;
-  return result;
 };
 
-export const getFormattedDate = (date) => `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+export const getFormattedDate = (date) => dayjs(date).format('DD.MM HH:mm');
 
-export const getFormattedDay = (date) => `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()}`;
+export const getFormattedDay = (date) => dayjs(date).format('MMM DD').toUpperCase();
