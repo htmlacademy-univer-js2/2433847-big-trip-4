@@ -1,18 +1,18 @@
-import {getFormattedDate, getFormattedDuration} from '../utils/utils';
+import {getFormattedDate, getFormattedDay, getFormattedDuration} from '../utils/utils';
 import AbstractView from '../framework/view/abstract-view';
 
 const routePointTemplate = (routePoint) => `<li class="trip-events__item">
     <div class="event">
-        <time class="event__date" datetime=${routePoint.timeFrom.toISOString()}>${getFormattedDate(routePoint.timeFrom)}</time>
+        <time class="event__date" datetime=${routePoint.timeFrom.toISOString()}>${getFormattedDay(routePoint.timeFrom)}</time>
         <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${routePoint.type.toLowerCase() ?? 'taxi'}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${routePoint.type} ${routePoint.destination.name}</h3>
         <div class="event__schedule">
             <p class="event__time">
-                <time class="event__start-time" datetime=${routePoint.timeFrom.toISOString()}>${routePoint.timeFrom.toLocaleString([], {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'})}</time>
+                <time class="event__start-time" datetime=${routePoint.timeFrom.toISOString()}>${getFormattedDate(routePoint.timeFrom)}</time>
                 &mdash;
-                <time class="event__end-time" datetime=${routePoint.timeTo.toISOString()}>${routePoint.timeTo.toLocaleString([], {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'})}</time>
+                <time class="event__end-time" datetime=${routePoint.timeTo.toISOString()}>${getFormattedDate(routePoint.timeTo)}</time>
             </p>
             <p class="event__duration">${getFormattedDuration(routePoint.timeFrom, routePoint.timeTo)}</p>
         </div>

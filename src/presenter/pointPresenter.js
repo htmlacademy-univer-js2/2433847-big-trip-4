@@ -1,62 +1,76 @@
 import PointView from '../view/routePointView';
-import {render, replace} from '../framework/render';
+import {remove, render, replace} from '../framework/render';
 import EditFormView from '../view/editFormView';
 
 export default class PointPresenter {
+  #container;
+  #changeDataCallback;
+  #resetViewsCallback;
+  #currentView;
+  #point;
+  #pointView;
+  #editFormView;
   constructor(container, changeData, resetViews) {
-    this._container = container;
-    this._changeDataCallback = changeData;
-    this._resetViewsCallback = resetViews;
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
+    this.#container = container;
+    this.#changeDataCallback = changeData;
+    this.#resetViewsCallback = resetViews;
+    this.#handleEscKeyDown = this.#handleEscKeyDown.bind(this);
   }
 
   init(point) {
-    const currentView = this._currentView;
-
-    this._point = point;
-    this._pointView = new PointView(this._point);
-    this._pointView.setClickHandler(this._handlePointClick.bind(this));
-    this._pointView.setFavoriteClickHandler(this._handleFavoriteClick.bind(this));
-    this._editFormView = new EditFormView(this._point);
-    this._editFormView.setClickHandler(this._handlePointClick.bind(this));
+    const currentView = this.#currentView;
+    this.#point = point;
+    this.#pointView = new PointView(this.#point);
+    this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
+    this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
+    this.#editFormView = new EditFormView(this.#point);
+    this.#editFormView.setClickHandler(this.#handlePointClick.bind(this));
+    this.#editFormView.setSubmitHandler(this.#handlePointClick.bind(this));
 
     if (currentView === undefined) {
-      render(this._pointView, this._container);
+      render(this.#pointView, this.#container);
     } else {
-      replace(this._pointView, currentView);
+      replace(this.#pointView, currentView);
     }
-    this._currentView = this._pointView;
+    this.#currentView = this.#pointView;
   }
 
-  _handleEscKeyDown(evt) {
+  #handleEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.resetView();
     }
-  }
+  };
 
   resetView() {
-    if (this._currentView instanceof EditFormView) {
-      document.removeEventListener('keydown', this._handleEscKeyDown);
-      this._currentView = this._pointView;
-      replace(this._currentView, this._editFormView);
+    if (this.#currentView instanceof EditFormView) {
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+      this.#currentView = this.#pointView;
+      replace(this.#currentView, this.#editFormView);
     }
   }
 
-  _handleFavoriteClick() {
-    this._changeDataCallback({
-      ...this._point,
-      favorite: !this._point.favorite
+  #handleFavoriteClick() {
+    this.#changeDataCallback({
+      ...this.#point,
+      favorite: !this.#point.favorite
     });
   }
 
-  _handlePointClick() {
-    if (this._currentView instanceof PointView) {
-      this._resetViewsCallback();
-      document.addEventListener('keydown', this._handleEscKeyDown);
-      this._currentView = this._editFormView;
-      replace(this._currentView, this._pointView);
+  #handlePointClick() {
+    if (this.#currentView instanceof PointView) {
+      this.#resetViewsCallback();
+      document.addEventListener('keydown', this.#handleEscKeyDown);
+      this.#currentView = this.#editFormView;
+      replace(this.#currentView, this.#pointView);
     } else {
       this.resetView();
     }
+  }
+
+  destroy() {
+    if (this.#currentView instanceof EditFormView) {
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+    }
+    remove(this.#currentView);
   }
 }

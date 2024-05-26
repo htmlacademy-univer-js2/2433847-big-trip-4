@@ -14,4 +14,6 @@ export const getFormattedDuration = (timeFrom, timeTo) => {
   return result;
 };
 
-export const getFormattedDate = (date) => `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDay()}`;
+export const getFormattedDate = (date) => `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+
+export const getFormattedDay = (date) => `${date.toLocaleString('default', { month: 'short' }).toUpperCase()} ${date.getDate()}`;
