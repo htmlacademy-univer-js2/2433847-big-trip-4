@@ -26,3 +26,11 @@ export const generateDestination = () => ({
   description: generateDescription(),
   pictures: generatePhotos(),
 });
+
+export const generateDestinationByCity = (city) => ({
+  id: crypto.randomUUID(),
+  name: city,
+  location: city,
+  description: generateDescription(),
+  pictures: generatePhotos(),
+});
