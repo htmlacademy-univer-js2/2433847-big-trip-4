@@ -29,6 +29,23 @@ export default class Api extends ApiService {
     })
       .then(ApiService.parseResponse);
   }
+
+  createPoint(data) {
+    return this._load({
+      url: 'points',
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': 'application/json'})
+    })
+      .then(ApiService.parseResponse);
+  }
+
+  deletePoint(id) {
+    return this._load({
+      url: `points/${id}`,
+      method: 'DELETE'
+    });
+  }
 }
 
 
