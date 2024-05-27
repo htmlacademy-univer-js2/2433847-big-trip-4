@@ -32,11 +32,11 @@ export default class PointPresenter {
     this.#point = point;
     if (this.#isNewPoint) {
       this.#point = POINT_EMPTY;
+    } else {
+      this.#pointView = new PointView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
+      this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
+      this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
     }
-
-    this.#pointView = new PointView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
-    this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
-    this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
 
     this.#editFormView = new EditFormView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
     this.#editFormView.setClickHandler(this.#handlePointClick.bind(this));
@@ -103,6 +103,8 @@ export default class PointPresenter {
   destroy() {
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     remove(this.#editFormView);
-    remove(this.#pointView);
+    if (this.#pointView) {
+      remove(this.#pointView);
+    }
   }
 }

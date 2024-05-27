@@ -1,5 +1,6 @@
 import Observable from '../framework/observable';
 import {adaptToClient, adaptToServer} from '../utils/adapter';
+import {ModelEvent} from '../const';
 
 export default class RouteModel extends Observable {
   #points;
@@ -22,10 +23,10 @@ export default class RouteModel extends Observable {
       ]);
       const points = await this.#apiService.getPoints();
       this.#points = points.map((point) => adaptToClient(point, this.#destinationModel.destinations, this.#offersModel.offers));
-      this._notify('init', {error: false});
+      this._notify(ModelEvent.INIT, {error: false});
     } catch (e) {
       this.#points = [];
-      this._notify('init', {error: e});
+      this._notify(ModelEvent.INIT, {error: e});
     }
   }
 
@@ -38,18 +39,26 @@ export default class RouteModel extends Observable {
       .then((response) => adaptToClient(response)).then(
         (response) => {
           this.#points = this.#points.map((point) => point.id === response.id ? response : point);
-          this._notify('update', response);
+          this._notify(ModelEvent.UPDATE, response);
         }
       );
   }
 
-  deletePoint(id) {
-    this.#points = this.#points.filter((point) => point.id !== id);
-    this._notify('delete', id);
+  async addPoint(point) {
+    await this.#apiService.createPoint(adaptToServer(point))
+      .then((response) => adaptToClient(response)).then(
+        (response) => {
+          this.#points.push(response);
+          this._notify(ModelEvent.ADD, response);
+        }
+      );
   }
 
-  addPoint(point) {
-    this.#points.push(point);
-    this._notify('add', point);
+  async deletePoint(id) {
+    await this.#apiService.deletePoint(id)
+      .then(() => {
+        this.#points = this.#points.filter((point) => point.id !== id);
+        this._notify(ModelEvent.DELETE, id);
+      });
   }
 }
