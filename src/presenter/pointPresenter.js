@@ -2,7 +2,6 @@ import PointView from '../view/routePointView';
 import {remove, render, replace} from '../framework/render';
 import EditFormView from '../view/editFormView';
 import {POINT_EMPTY, UserAction} from '../const';
-import {getOffersByType} from '../mock/routeOffer';
 
 export default class PointPresenter {
   #container;
@@ -10,29 +9,36 @@ export default class PointPresenter {
   #resetViewsCallback;
   #currentView;
   #point;
+  #destinationModel;
+  #offersModel;
   #pointView;
   #editFormView;
   #isNewPoint = false;
 
-  constructor(container, changeData, resetViews) {
+  constructor(container, changeData, resetViews, destinationModel, offersModel) {
     this.#container = container;
     this.#changeDataCallback = changeData;
     this.#resetViewsCallback = resetViews;
+    this.#destinationModel = destinationModel;
+    this.#offersModel = offersModel;
     this.#handleEscKeyDown = this.#handleEscKeyDown.bind(this);
   }
 
   init(point, isNewPoint = false) {
     const currentView = this.#currentView;
     const editFormView = this.#editFormView;
+
     this.#isNewPoint = isNewPoint;
     this.#point = point;
     if (this.#isNewPoint) {
-      this.#point = {...POINT_EMPTY, options: getOffersByType(this.#point.type)};
+      this.#point = POINT_EMPTY;
     }
-    this.#pointView = new PointView(this.#point);
+
+    this.#pointView = new PointView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
     this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
     this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
-    this.#editFormView = new EditFormView(this.#point);
+
+    this.#editFormView = new EditFormView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
     this.#editFormView.setClickHandler(this.#handlePointClick.bind(this));
     this.#editFormView.setSubmitHandler(this.#handleSubmitClick.bind(this));
     this.#editFormView.setDeleteClickHandler(this.#handleDeleteClick.bind(this));
@@ -56,7 +62,7 @@ export default class PointPresenter {
       document.removeEventListener('keydown', this.#handleEscKeyDown);
       this.#currentView = this.#pointView;
       if (this.#isNewPoint) {
-        this.destroy();
+        this.#resetViewsCallback();
       }
       this.#editFormView.resetFields();
       replace(this.#currentView, this.#editFormView);

@@ -3,9 +3,14 @@ import {routePointTemplate} from '../template/routePointTemplate';
 
 
 export default class RoutePointView extends AbstractView {
-  constructor(routePoint) {
+  #routePoint;
+  #destinations;
+  #offers;
+  constructor(routePoint, destinations, offers) {
     super();
-    this.routePoint = routePoint;
+    this.#routePoint = routePoint;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   setClickHandler(handler) {
@@ -17,6 +22,6 @@ export default class RoutePointView extends AbstractView {
   }
 
   get template() {
-    return routePointTemplate(this.routePoint);
+    return routePointTemplate(this.#routePoint, this.#destinations, this.#offers);
   }
 }

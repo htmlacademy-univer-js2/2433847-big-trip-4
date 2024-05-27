@@ -2,7 +2,7 @@ export const POINT_EMPTY = {
   id: null,
   favorite: false,
   type: 'Taxi',
-  options: [
+  offers: [
   ],
   destination: {
     name: '',
@@ -34,6 +34,9 @@ export const possibleOffers = [
 ];
 export const cities = ['Amsterdam', 'Chamonix', 'Geneva', 'Paris', 'Berlin', 'London', 'Moscow', 'New York', 'Tokyo', 'Sydney', 'Rio de Janeiro', 'Cape Town', 'Dubai',];
 
+
+export const AUTHORIZATION = 'Basic pojsdfxhvpsijfbn';
+export const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 export const FilterType = {
   EVERYTHING: 'Everything',

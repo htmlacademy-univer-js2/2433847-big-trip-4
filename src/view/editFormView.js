@@ -1,16 +1,16 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {POINT_EMPTY} from '../const';
 import {editFormTemplate} from '../template/editFormTemplate';
-import {getOffersByType} from '../mock/routeOffer';
-import {generateDestinationByCity} from '../mock/routeDestination';
 import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 
 export default class EditFormView extends AbstractStatefulView {
-  constructor(routePoint = POINT_EMPTY) {
+  constructor(routePoint = POINT_EMPTY, destinations, offers) {
     super();
     this._callback = {};
     this.#point = routePoint;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#typeChangeHandler = this.#typeChangeHandler.bind(this);
     this.#destinationChangeHandler = this.#destinationChangeHandler.bind(this);
     this.#priceChangeHandler = this.#priceChangeHandler.bind(this);
@@ -19,6 +19,8 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   #point;
+  #destinations;
+  #offers;
   #endTime;
   #startTime;
 
@@ -38,20 +40,19 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   get template() {
-    return editFormTemplate(this._state.routePoint);
+    return editFormTemplate(this._state.routePoint, this.#destinations, this.#offers);
   }
 
   #typeChangeHandler = (evt) => {
     const type = evt.target.value;
-    const offers = getOffersByType(type);
-    this.updateElement({routePoint: {...this._state.routePoint, type: type, options: offers}});
+    this.updateElement({routePoint: {...this._state.routePoint, type: type, offers: this.#offers}});
   };
 
   #destinationChangeHandler = (evt) => {
     this.updateElement({
       routePoint: {
         ...this._state.routePoint,
-        destination: generateDestinationByCity(evt.target.value)
+        destination: this.#destinations.find((destination) => destination.name === evt.target.value).id
       }
     });
   };
@@ -62,14 +63,14 @@ export default class EditFormView extends AbstractStatefulView {
 
   #offerChangeHandler = (evt) => {
     const checkedOffer = evt.target.dataset.id;
-    const newOffers = this._state.routePoint.options.map((offer) => ({
+    const newOffers = this._state.routePoint.offers.map((offer) => ({
       ...offer,
       checked: offer.id === checkedOffer ? !offer.checked : offer.checked
     }));
     this.updateElement({
       routePoint: {
         ...this._state.routePoint,
-        options: newOffers
+        offers: newOffers
       }
     });
   };
