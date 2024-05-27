@@ -3,30 +3,31 @@ import {render} from '../framework/render';
 import EmptyRouteView from '../view/emptyRouteView';
 import SorterView from '../view/sorterView';
 import TripView from '../view/tripView';
+import {FilterType, SortType} from '../const';
 
 export default class TripPresenter {
   #container;
-  #points;
-  #filters;
-  constructor(container, points, filters) {
+  #route;
+  #filter;
+
+  constructor(container, route, filter) {
     this.#container = container;
-    this.#points = points;
+    this.#route = route;
     this.#handlePointChange = this.#handlePointChange.bind(this);
-    this.#filters = filters;
+    this.#filter = filter;
+    this.#filter.addObserver(this.#handleFilterTypeChange.bind(this));
   }
 
 
   #pointPresenters = new Map();
   #eventListComponent = new TripView();
-  #currentSortType = 'day';
+  #sorterComponent = new SorterView();
+  #currentSortType = SortType.DAY;
 
 
   init() {
-    const sorterView = new SorterView();
-    sorterView.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
-    render(sorterView, this.#container);
+    this.#initSorter();
     render(this.#eventListComponent, this.#container);
-    this.#sortPoints();
     this.#initPoints();
   }
 
@@ -34,32 +35,64 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
+  #initSorter() {
+    this.#sorterComponent.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
+    render(this.#sorterComponent, this.#container);
+  }
+
   #initPoints() {
-    if (this.#points.length === 0) {
-      const noRouteMessage = new EmptyRouteView(this.#filters.find((filter) => filter.checked).name);
+    const filteredPoints = this.#filterPoints(this.#route.getPoints());
+    const sortedPoints = this.#sortPoints(filteredPoints);
+    if (sortedPoints.length === 0) {
+      const noRouteMessage = new EmptyRouteView(this.#filter.getFilter());
       render(noRouteMessage, this.#eventListComponent.element);
-    } else {
-      this.#points.forEach((point) => {
-        const pointPresenter = new PointPresenter(this.#eventListComponent.element, this.#handlePointChange, this.#resetViews.bind(this));
-        pointPresenter.init(point);
-        this.#pointPresenters.set(point.id, pointPresenter);
-      });
+      return;
+    }
+    sortedPoints.forEach((point) => {
+      const pointPresenter = new PointPresenter(this.#eventListComponent.element, this.#handlePointChange, this.#resetViews.bind(this));
+      pointPresenter.init(point);
+      this.#pointPresenters.set(point.id, pointPresenter);
+    });
+  }
+
+  #removePoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
+  #handleFilterTypeChange() {
+    this.#currentSortType = SortType.DAY;
+    this.#removePoints();
+    this.#initPoints();
+    this.#sorterComponent.resetSortType();
+  }
+
+  #filterPoints(points) {
+    const filterType = this.#filter.getFilter();
+    switch (filterType) {
+      case FilterType.EVERYTHING:
+        return points;
+      case FilterType.FUTURE:
+        return points.filter((point) => new Date(point.timeFrom) > new Date());
+      case FilterType.PRESENT:
+        return points.filter((point) => new Date(point.timeTo) < new Date());
+      case FilterType.PAST:
+        return points.filter((point) => new Date(point.timeTo) < new Date());
+      default:
+        throw new Error(`Unknown filter type ${filterType}`);
     }
   }
 
-  #sortPoints() {
+  #sortPoints(points) {
     switch (this.#currentSortType) {
-      case 'day':
-        this.#points.sort((a, b) => new Date(a.timeFrom) - new Date(b.timeFrom));
-        break;
-      case 'time':
-        this.#points.sort((a, b) => (b.timeTo - b.timeFrom) - (a.timeTo - a.timeFrom));
-        break;
-      case 'price':
-        this.#points.sort((a, b) => b.price - a.price);
-        break;
+      case SortType.DAY:
+        return points.sort((a, b) => new Date(a.timeFrom) - new Date(b.timeFrom));
+      case SortType.TIME:
+        return points.sort((a, b) => (b.timeTo - b.timeFrom) - (a.timeTo - a.timeFrom));
+      case SortType.PRICE:
+        return points.sort((a, b) => b.price - a.price);
       default:
-        throw new Error('Unknown sort type');
+        throw new Error(`Unknown filter type ${this.#currentSortType}`);
     }
   }
 
@@ -67,14 +100,13 @@ export default class TripPresenter {
     if (this.#currentSortType !== sortType) {
       this.#currentSortType = sortType;
       this.#pointPresenters.forEach((presenter) => presenter.destroy());
-      this.#sortPoints();
       this.#initPoints();
     }
   }
 
 
   #handlePointChange = (updatedPoint) => {
-    this.#points = this.#points.map((point) => (point.id === updatedPoint.id ? updatedPoint : point));
+    this.#route.updatePoint(updatedPoint.id, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 }

@@ -17,9 +17,29 @@ export const POINT_EMPTY = {
 export const possibleTypes = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant',];
 
 export const possibleOffers = [
-  {title: 'Add luggage', price: 50, type: ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant']},
-  {title: 'Switch to comfort', price: 80, type: ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant']},
+  {
+    title: 'Add luggage',
+    price: 50,
+    type: ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant']
+  },
+  {
+    title: 'Switch to comfort',
+    price: 80,
+    type: ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant']
+  },
   {title: 'Add meal', price: 15, type: ['Flight', 'Train', 'Ship', 'Check-in', 'Sightseeing', 'Restaurant']},
   {title: 'Choose seats', price: 5, type: ['Flight', 'Train', 'Bus', 'Check-in', 'Sightseeing', 'Restaurant']},
   {title: 'Travel by train', price: 40, type: ['Train', 'Check-in', 'Sightseeing', 'Restaurant']},
 ];
+
+export const FilterType = {
+  EVERYTHING: 'Everything',
+  FUTURE: 'Future',
+  PRESENT: 'Present',
+  PAST: 'Past'
+};
+export const SortType = {
+  DAY: 'DAY',
+  TIME: 'Time',
+  PRICE: 'Price',
+};

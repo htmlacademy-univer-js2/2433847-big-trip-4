@@ -17,12 +17,15 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   #endTime;
+  #startTime;
   setSubmitHandler(handler) {
-    this.element.querySelector('form').addEventListener('submit', handler);
+    this._callback.submit = handler;
+    this.element.querySelector('form').addEventListener('submit', this._callback.submit);
   }
 
   setClickHandler(handler) {
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', handler);
+    this._callback.click = handler;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this._callback.click);
   }
 
   get template() {
@@ -67,13 +70,18 @@ export default class EditFormView extends AbstractStatefulView {
       onChange: this.#endTimeChangeHandler,
     });
 
-    flatpickr(this.element.querySelector('#event-start-time-1'), {
+    this.#startTime = flatpickr(this.element.querySelector('#event-start-time-1'), {
       enableTime: true,
       dateFormat: 'd/m/Y H:i',
       defaultDate: this._state.routePoint.timeFrom,
       onChange: this.#startTimeChangeHandler,
     });
+  }
 
+  removeElement() {
+    super.removeElement();
+    this.#endTime.destroy();
+    this.#startTime.destroy();
   }
 
 }

@@ -71,6 +71,7 @@ export default class PointPresenter {
     if (this.#currentView instanceof EditFormView) {
       document.removeEventListener('keydown', this.#handleEscKeyDown);
     }
-    remove(this.#currentView);
+    remove(this.#editFormView);
+    remove(this.#pointView);
   }
 }

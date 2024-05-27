@@ -11,6 +11,17 @@ export default class Route {
     return this.#points;
   }
 
+  setPoints(points) {
+    this.#points = points;
+  }
+
+  updatePoint(id, newPoint) {
+    const index = this.#points.findIndex((point) => point.id === id);
+    if (index !== -1) {
+      this.#points[index] = newPoint;
+    }
+  }
+
   generatePoints(num) {
     for (let i = 0; i < num; i++) {
       this.#points.push(generateRoutePoint());
