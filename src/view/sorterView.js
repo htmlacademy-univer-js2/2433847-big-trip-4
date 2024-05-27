@@ -4,6 +4,7 @@ import {sorterTemplate} from '../template/sorterTemplate';
 export default class SorterView extends AbstractView {
   constructor() {
     super();
+    this._callback = {};
   }
 
   get template() {

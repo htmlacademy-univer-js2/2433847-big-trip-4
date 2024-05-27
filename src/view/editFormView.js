@@ -9,6 +9,7 @@ import flatpickr from 'flatpickr';
 export default class EditFormView extends AbstractStatefulView {
   constructor(routePoint = POINT_EMPTY) {
     super();
+    this._callback = {};
     this.#point = routePoint;
     this.#typeChangeHandler = this.#typeChangeHandler.bind(this);
     this.#destinationChangeHandler = this.#destinationChangeHandler.bind(this);

@@ -11,6 +11,7 @@ export default class TripPresenter {
   #filter;
 
   constructor(container, route, filter) {
+    this._callback = {};
     this.#container = container;
     this.#route = route;
     this.#handlePointChange = this.#handlePointChange.bind(this);
