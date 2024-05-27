@@ -21,9 +21,10 @@ export const routePointTemplate = (routePoint) => `<li class="trip-events__item"
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
             <li class="event__offer">
-                <span class="event__offer-title">${routePoint.options[0].title}</span>
+                ${routePoint.options.length > 0 ?
+    `<span class="event__offer-title">${routePoint.options[0].title}</span>
                 &plus;&euro;&nbsp;
-                <span class="event__offer-price">${routePoint.options[0].price}</span>
+                <span class="event__offer-price">${routePoint.options[0].price}</span>` : ''}
             </li>
         </ul>
         <button class="event__favorite-btn ${routePoint.favorite ? 'event__favorite-btn--active' : ''}" type="button">

@@ -16,4 +16,8 @@ export default class FilterView extends AbstractView {
   get template() {
     return filterViewTemplate;
   }
+
+  updateFilter(filterType) {
+    this.element.querySelector(`#filter-${filterType.toLowerCase()}`).checked = true;
+  }
 }

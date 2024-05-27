@@ -26,7 +26,7 @@ export default class SorterView extends AbstractView {
   resetSortType() {
     const sortTypeInputs = this.element.querySelectorAll('input[type="radio"]');
     sortTypeInputs.forEach((input) => {
-      input.checked = input.dataset.sortType === 'day';
+      input.checked = input.dataset.sortType === 'Day';
     });
   }
 }

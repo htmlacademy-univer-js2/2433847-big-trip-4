@@ -1,3 +1,5 @@
+import {cities} from '../const';
+
 export const editFormTemplate = (routePoint) => `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
         <header class="event__header">
@@ -77,9 +79,7 @@ export const editFormTemplate = (routePoint) => `<li class="trip-events__item">
                 <input class="event__input  event__input--destination" id="event-destination-1" type="text"
                        name="event-destination" value="${routePoint.destination.name}" list="destination-list-1">
                 <datalist id="destination-list-1">
-                    <option value="Amsterdam"></option>
-                    <option value="Geneva"></option>
-                    <option value="Chamonix"></option>
+                    ${cities.map((city) => `<option value="${city}"></option>`).join('')}
                 </datalist>
             </div>
 
@@ -114,7 +114,7 @@ export const editFormTemplate = (routePoint) => `<li class="trip-events__item">
                     ${routePoint.options.map((option) => `
                       <div class="event__offer-selector">
                           <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.id}" type="checkbox"
-                                 name="event-offer-${option.id}" ${option.checked ? 'checked' : ''}>
+                          data-id="${option.id}" name="event-offer-${option.id}" ${option.checked ? 'checked' : ''}>
                           <label class="event__offer-label" for="event-offer-${option.id}">
                               <span class="event__offer-title">${option.title}</span>
                               &plus;&euro;&nbsp;

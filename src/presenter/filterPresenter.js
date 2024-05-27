@@ -12,6 +12,12 @@ export default class FilterPresenter {
     this._filterView = new FilterView();
     this._filterView.setFilterTypeChangeHandler(this._handleFilterTypeChange.bind(this));
     render(this._filterView, this._container, RenderPosition.BEFOREEND);
+
+    this._filterModel.addObserver((event, payload) => {
+      if (event === 'filterChange') {
+        this._filterView.updateFilter(payload);
+      }
+    });
   }
 
   _handleFilterTypeChange(filterType) {

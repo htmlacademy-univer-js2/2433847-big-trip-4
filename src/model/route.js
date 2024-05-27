@@ -22,6 +22,14 @@ export default class Route {
     }
   }
 
+  deletePoint(id) {
+    this.#points = this.#points.filter((point) => point.id !== id);
+  }
+
+  addPoint(point) {
+    this.#points.push(point);
+  }
+
   generatePoints(num) {
     for (let i = 0; i < num; i++) {
       this.#points.push(generateRoutePoint());

@@ -1,9 +1,9 @@
 import PointPresenter from './pointPresenter';
-import {render} from '../framework/render';
+import {remove, render} from '../framework/render';
 import EmptyRouteView from '../view/emptyRouteView';
 import SorterView from '../view/sorterView';
 import TripView from '../view/tripView';
-import {FilterType, SortType} from '../const';
+import {FilterType, POINT_EMPTY, SortType, UserAction} from '../const';
 
 export default class TripPresenter {
   #container;
@@ -16,36 +16,38 @@ export default class TripPresenter {
     this.#handlePointChange = this.#handlePointChange.bind(this);
     this.#filter = filter;
     this.#filter.addObserver(this.#handleFilterTypeChange.bind(this));
+    document.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#handleCreateEventClick);
   }
-
 
   #pointPresenters = new Map();
   #eventListComponent = new TripView();
   #sorterComponent = new SorterView();
   #currentSortType = SortType.DAY;
-
+  #noPointsBanner;
+  #createNewPointPresenter;
 
   init() {
-    this.#initSorter();
+    this.#sorterComponent.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
+    render(this.#sorterComponent, this.#container);
     render(this.#eventListComponent, this.#container);
     this.#initPoints();
   }
 
   #resetViews() {
+    if (this.#createNewPointPresenter) {
+      this.#createNewPointPresenter.destroy();
+      this.#createNewPointPresenter = null;
+    }
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
-  #initSorter() {
-    this.#sorterComponent.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
-    render(this.#sorterComponent, this.#container);
-  }
-
   #initPoints() {
+    this.#removePoints();
     const filteredPoints = this.#filterPoints(this.#route.getPoints());
     const sortedPoints = this.#sortPoints(filteredPoints);
-    if (sortedPoints.length === 0) {
-      const noRouteMessage = new EmptyRouteView(this.#filter.getFilter());
-      render(noRouteMessage, this.#eventListComponent.element);
+    if (sortedPoints.length === 0 && !this.#createNewPointPresenter) {
+      this.#noPointsBanner = new EmptyRouteView(this.#filter.getFilter());
+      render(this.#noPointsBanner, this.#eventListComponent.element);
       return;
     }
     sortedPoints.forEach((point) => {
@@ -58,13 +60,15 @@ export default class TripPresenter {
   #removePoints() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+    if (this.#noPointsBanner) {
+      remove(this.#noPointsBanner);
+    }
   }
 
   #handleFilterTypeChange() {
     this.#currentSortType = SortType.DAY;
-    this.#removePoints();
-    this.#initPoints();
     this.#sorterComponent.resetSortType();
+    this.#initPoints();
   }
 
   #filterPoints(points) {
@@ -105,8 +109,32 @@ export default class TripPresenter {
   }
 
 
-  #handlePointChange = (updatedPoint) => {
-    this.#route.updatePoint(updatedPoint.id, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  #handlePointChange = (actionType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#route.updatePoint(update.id, update);
+        this.#pointPresenters.get(update.id).init(update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#createNewPointPresenter.destroy();
+        this.#createNewPointPresenter = null;
+        this.#route.addPoint(update);
+        this.#initPoints();
+        break;
+      case UserAction.DELETE_POINT:
+        this.#route.deletePoint(update.id);
+        this.#pointPresenters.get(update.id).destroy();
+        this.#pointPresenters.delete(update.id);
+        break;
+    }
+  };
+
+  #handleCreateEventClick = () => {
+    if (this.#createNewPointPresenter) {
+      this.#createNewPointPresenter.destroy();
+    }
+    this.#createNewPointPresenter = new PointPresenter(this.#eventListComponent.element, this.#handlePointChange, this.#resetViews.bind(this));
+    this.#createNewPointPresenter.init(POINT_EMPTY, true);
+    this.#initPoints();
   };
 }
