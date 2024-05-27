@@ -1,13 +1,13 @@
 import AbstractView from '../framework/view/abstract-view';
 import {sorterTemplate} from '../template/sorterTemplate';
 
-export default class SorterView extends AbstractView{
+export default class SorterView extends AbstractView {
   constructor() {
     super();
   }
 
   get template() {
-    return sorterTemplate;
+    return sorterTemplate();
   }
 
   #sortTypeChangeHandler = (evt) => {
@@ -21,5 +21,12 @@ export default class SorterView extends AbstractView{
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.element.addEventListener('change', this.#sortTypeChangeHandler);
+  }
+
+  resetSortType() {
+    const sortTypeInputs = this.element.querySelectorAll('input[type="radio"]');
+    sortTypeInputs.forEach((input) => {
+      input.checked = input.dataset.sortType === 'Day';
+    });
   }
 }
