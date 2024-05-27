@@ -1,6 +1,6 @@
 export const editFormTemplate = (routePoint, destinations, offers) => {
   const destination = destinations.find((d) => d.id === routePoint.destination);
-  const pointOffers = offers.find((o) => o.type === routePoint.type).offers;
+  const pointOffers = offers.find((o) => o.type === routePoint.type)?.offers ?? [];
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
           <header class="event__header">
@@ -73,12 +73,12 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                   </div>
               </div>
 
-              <div class="event__field-group  event__field-group--destination">
+               <div class="event__field-group  event__field-group--destination">
                   <label class="event__label  event__type-output" for="event-destination-1">
                       ${routePoint.type}
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text"
-                         name="event-destination" value="${destination.name}" list="destination-list-1">
+                         name="event-destination" value="${destination?.name ?? ''}" list="destination-list-1">
                   <datalist id="destination-list-1">
                       ${destinations.map((d) => `<option value="${d.name}"></option>`).join('')}
                   </datalist>
@@ -123,7 +123,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                         </div>`).join('')}
                   </div>
               </section>
-              <section class="event__section  event__section--destination">
+              ${destination ? `<section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                   <p class="event__destination-description">${destination.description}</p>
                   ${destination.pictures.length > 0 ? `
@@ -135,7 +135,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                         </div>
                     </div>
                   ` : ''}
-              </section>
+              </section>` : ''}
           </section>
       </form>
   </li>`;

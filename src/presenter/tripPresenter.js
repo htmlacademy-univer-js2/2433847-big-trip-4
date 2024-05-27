@@ -3,7 +3,7 @@ import {remove, render} from '../framework/render';
 import EmptyRouteView from '../view/emptyRouteView';
 import SorterView from '../view/sorterView';
 import TripView from '../view/tripView';
-import {POINT_EMPTY, SortType, UserAction} from '../const';
+import {ModelEvent, POINT_EMPTY, SortType, UserAction} from '../const';
 import {sort} from '../utils/sort';
 import {filter} from '../utils/filter';
 import LoadingView from '../view/loadingView';
@@ -72,13 +72,17 @@ export default class TripPresenter {
 
   #handleModelEvent = async (updateType, data) => {
     switch (updateType) {
-      case 'points':
+      case ModelEvent.DELETE:
+        this.#pointPresenters.get(data).destroy();
+        this.#pointPresenters.delete(data);
+        break;
+      case ModelEvent.UPDATE:
         this.#initPoints();
         break;
-      case 'update':
+      case ModelEvent.ADD:
         this.#pointPresenters.get(data.id).init(data);
         break;
-      case 'init':
+      case ModelEvent.INIT:
         this.#isLoading = false;
         this.#initPoints();
         break;
@@ -128,8 +132,6 @@ export default class TripPresenter {
         break;
       case UserAction.DELETE_POINT:
         this.#route.deletePoint(update.id);
-        this.#pointPresenters.get(update.id).destroy();
-        this.#pointPresenters.delete(update.id);
         break;
     }
   };
@@ -138,7 +140,7 @@ export default class TripPresenter {
     if (this.#createNewPointPresenter) {
       this.#createNewPointPresenter.destroy();
     }
-    this.#createNewPointPresenter = new PointPresenter(this.#tripView.element, this.#handlePointChange, this.#resetViews.bind(this));
+    this.#createNewPointPresenter = new PointPresenter(this.#tripView.element, this.#handlePointChange, this.#resetViews.bind(this), this.#destinationModel, this.#offersModel);
     this.#createNewPointPresenter.init(POINT_EMPTY, true);
     this.#initPoints();
   };

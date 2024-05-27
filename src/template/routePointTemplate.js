@@ -15,7 +15,7 @@ function createOfferListItems(pointOffers, routePoint) {
 
 export const routePointTemplate = (routePoint, destinations, offers) => {
   const destination = destinations.find((d) => d.id === routePoint.destination);
-  const pointOffers = offers.find((o) => o.type === routePoint.type).offers;
+  const pointOffers = offers.find((o) => o.type === routePoint.type)?.offers ?? null
   return `<li class="trip-events__item">
       <div class="event">
           <time class="event__date" datetime=${routePoint.timeFrom}>${getFormattedDay(routePoint.timeFrom)}</time>
@@ -36,7 +36,7 @@ export const routePointTemplate = (routePoint, destinations, offers) => {
           </p>
           <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
-              ${createOfferListItems(pointOffers, routePoint)}
+              ${pointOffers ? createOfferListItems(pointOffers, routePoint) : ''}
           </ul>
           <button class="event__favorite-btn ${routePoint.favorite ? 'event__favorite-btn--active' : ''}" type="button">
               <span class="visually-hidden">Toggle favorite</span>

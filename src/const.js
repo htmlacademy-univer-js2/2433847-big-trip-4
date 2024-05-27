@@ -1,7 +1,7 @@
 export const POINT_EMPTY = {
   id: null,
   favorite: false,
-  type: 'Taxi',
+  type: 'Flight',
   offers: [
   ],
   destination: {
