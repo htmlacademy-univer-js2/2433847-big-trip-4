@@ -9,11 +9,19 @@ import {filter} from '../utils/filter';
 import LoadingView from '../view/loading-view';
 
 export default class TripPresenter {
+  #currentSortType = SortType.DAY;
   #container;
   #route;
   #filter;
   #destinationModel;
   #offersModel;
+  #pointPresenters = new Map();
+  #tripView = new TripView();
+  #sorterView = new SorterView();
+  #loadingView = new LoadingView();
+  #isLoading = true;
+  #noPointsBanner;
+  #createNewPointPresenter;
 
   constructor(container, route, filterModel, destinationModel, offersModel) {
     this.#container = container;
@@ -27,14 +35,6 @@ export default class TripPresenter {
     this.#route.addObserver(this.#handleModelEvent);
   }
 
-  #pointPresenters = new Map();
-  #tripView = new TripView();
-  #sorterView = new SorterView();
-  #loadingView = new LoadingView();
-  #isLoading = true;
-  #currentSortType = SortType.DAY;
-  #noPointsBanner;
-  #createNewPointPresenter;
 
   init() {
     this.#sorterView.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
