@@ -1,20 +1,20 @@
-import TripPresenter from './presenter/tripPresenter';
-import TripInfoView from './view/tripInfoView';
+import TripPresenter from './presenter/trip-presenter';
+import TripInfoView from './view/trip-info-view';
 import RouteModel from './model/route';
 import {render, RenderPosition} from './framework/render';
 import {generateHeaderData} from './mock/headerInfo';
-import FilterPresenter from './presenter/filterPresenter';
+import FilterPresenter from './presenter/filter-presenter';
 import Filter from './model/filter';
 import DestinationModel from './model/destination';
 import Api from './api';
-import {AUTHORIZATION, END_POINT} from './const';
+import {AUTHORIZATION, ENDPOINT} from './const';
 import OfferModel from './model/offer';
 
 const header = document.querySelector('.trip-main');
 const tripFilters = document.querySelector('.trip-controls__filters');
 const tripEvents = document.querySelector('.trip-events');
 
-const apiService = new Api(END_POINT, AUTHORIZATION);
+const apiService = new Api(ENDPOINT, AUTHORIZATION);
 const destinationModel = new DestinationModel(apiService);
 const offersModel = new OfferModel(apiService);
 const routeModel = new RouteModel({

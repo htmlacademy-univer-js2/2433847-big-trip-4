@@ -1,12 +1,12 @@
-import PointPresenter from './pointPresenter';
+import PointPresenter from './point-presenter';
 import {remove, render} from '../framework/render';
-import EmptyRouteView from '../view/emptyRouteView';
-import SorterView from '../view/sorterView';
+import EmptyRouteView from '../view/empty-route-view';
+import SorterView from '../view/sorter-view';
 import TripView from '../view/tripView';
 import {ModelEvent, POINT_EMPTY, SortType, UserAction} from '../const';
 import {sort} from '../utils/sort';
 import {filter} from '../utils/filter';
-import LoadingView from '../view/loadingView';
+import LoadingView from '../view/loading-view';
 
 export default class TripPresenter {
   #container;

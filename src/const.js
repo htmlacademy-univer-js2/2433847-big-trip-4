@@ -15,7 +15,7 @@ export const POINT_EMPTY = {
 };
 
 export const AUTHORIZATION = 'Basic pojsdfxhvpsijfbn';
-export const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
+export const ENDPOINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
 export const FilterType = {
   EVERYTHING: 'Everything',

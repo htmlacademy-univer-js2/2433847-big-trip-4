@@ -1,4 +1,4 @@
-import FilterView from '../view/filterView';
+import FilterView from '../view/filter-view';
 import {render, RenderPosition} from '../framework/render';
 
 export default class FilterPresenter {

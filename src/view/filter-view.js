@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {filterViewTemplate} from '../template/filterViewTemplate';
+import {filterViewTemplate} from '../template/filter-view-template';
 
 export default class FilterView extends AbstractView {
   constructor() {

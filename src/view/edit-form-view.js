@@ -1,11 +1,11 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import {POINT_EMPTY} from '../const';
-import {editFormTemplate} from '../template/editFormTemplate';
+import {editFormTemplate} from '../template/edit-form-template';
 import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 
 export default class EditFormView extends AbstractStatefulView {
-  constructor(routePoint = POINT_EMPTY, destinations, offers) {
+  constructor(destinations, offers, routePoint = POINT_EMPTY) {
     super();
     this._callback = {};
     this.#point = routePoint;

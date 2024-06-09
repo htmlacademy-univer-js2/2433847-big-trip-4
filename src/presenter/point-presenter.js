@@ -1,6 +1,6 @@
-import PointView from '../view/routePointView';
+import PointView from '../view/route-point-view';
 import {remove, render, replace} from '../framework/render';
-import EditFormView from '../view/editFormView';
+import EditFormView from '../view/edit-form-view';
 import {POINT_EMPTY, UserAction} from '../const';
 
 export default class PointPresenter {
@@ -38,7 +38,7 @@ export default class PointPresenter {
       this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
     }
 
-    this.#editFormView = new EditFormView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
+    this.#editFormView = new EditFormView(this.#destinationModel.destinations, this.#offersModel.offers, this.#point);
     this.#editFormView.setClickHandler(this.#handlePointClick.bind(this));
     this.#editFormView.setSubmitHandler(this.#handleSubmitClick.bind(this));
     this.#editFormView.setDeleteClickHandler(this.#handleDeleteClick.bind(this));

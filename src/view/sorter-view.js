@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {sorterTemplate} from '../template/sorterTemplate';
+import {sorterTemplate} from '../template/sorter-template';
 
 export default class SorterView extends AbstractView {
   constructor() {
