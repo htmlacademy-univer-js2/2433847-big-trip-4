@@ -2,7 +2,6 @@ import TripPresenter from './presenter/trip-presenter';
 import TripInfoView from './view/trip-info-view';
 import RouteModel from './model/route';
 import {render, RenderPosition} from './framework/render';
-import {generateHeaderData} from './mock/headerInfo';
 import FilterPresenter from './presenter/filter-presenter';
 import Filter from './model/filter';
 import DestinationModel from './model/destination';

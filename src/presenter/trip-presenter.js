@@ -2,7 +2,7 @@ import PointPresenter from './point-presenter';
 import {remove, render} from '../framework/render';
 import EmptyRouteView from '../view/empty-route-view';
 import SorterView from '../view/sorter-view';
-import TripView from '../view/tripView';
+import TripView from '../view/trip-view';
 import {ModelEvent, POINT_EMPTY, SortType, UserAction} from '../const';
 import {sort} from '../utils/sort';
 import {filter} from '../utils/filter';
