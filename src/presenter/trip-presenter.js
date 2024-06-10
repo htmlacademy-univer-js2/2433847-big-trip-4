@@ -131,7 +131,13 @@ export default class TripPresenter {
         this.#initPoints();
         break;
       case UserAction.DELETE_POINT:
-        this.#route.deletePoint(update.id);
+        this.#route.deletePoint(update.id).then(
+          () => {
+            if (this.#route.getPoints().length === 0) {
+              this.#initPoints();
+            }
+          }
+        );
         break;
     }
   };

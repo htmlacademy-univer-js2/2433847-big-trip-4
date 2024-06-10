@@ -9,7 +9,7 @@ export const POINT_EMPTY = {
     description: '',
     pictures: [],
   },
-  price: 0,
+  price: 100,
   timeFrom: new Date(),
   timeTo: new Date(),
 };

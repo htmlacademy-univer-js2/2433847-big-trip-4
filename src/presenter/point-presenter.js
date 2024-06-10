@@ -32,6 +32,7 @@ export default class PointPresenter {
     this.#point = point;
     if (this.#isNewPoint) {
       this.#point = POINT_EMPTY;
+      document.addEventListener('keydown', this.#handleEscKeyDown);
     } else {
       this.#pointView = new PointView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
       this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
@@ -63,6 +64,8 @@ export default class PointPresenter {
       this.#currentView = this.#pointView;
       if (this.#isNewPoint) {
         this.#resetViewsCallback();
+        this.destroy();
+        return;
       }
       this.#editFormView.resetFields();
       replace(this.#currentView, this.#editFormView);
