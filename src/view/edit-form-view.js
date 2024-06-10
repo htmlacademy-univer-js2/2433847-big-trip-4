@@ -5,6 +5,13 @@ import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 
 export default class EditFormView extends AbstractStatefulView {
+  #point;
+  #destinations;
+  #offers;
+  #endTime;
+  #startTime;
+
+
   constructor(destinations, offers, routePoint = POINT_EMPTY) {
     super();
     this._callback = {};
@@ -18,71 +25,9 @@ export default class EditFormView extends AbstractStatefulView {
     this._restoreHandlers();
   }
 
-  #point;
-  #destinations;
-  #offers;
-  #endTime;
-  #startTime;
-
-  setSubmitHandler(handler) {
-    this._callback.submit = handler;
-    this.element.querySelector('form').addEventListener('submit', this._callback.submit);
-  }
-
-  setClickHandler(handler) {
-    this._callback.click = handler;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this._callback.click);
-  }
-
-  setDeleteClickHandler(handler) {
-    this._callback.deleteClick = handler;
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this._callback.deleteClick);
-  }
-
   get template() {
     return editFormTemplate(this._state.routePoint, this.#destinations, this.#offers);
   }
-
-  #typeChangeHandler = (evt) => {
-    const type = evt.target.value;
-    this.updateElement({routePoint: {...this._state.routePoint, type: type, offers: this.#offers}});
-  };
-
-  #destinationChangeHandler = (evt) => {
-    this.updateElement({
-      routePoint: {
-        ...this._state.routePoint,
-        destination: this.#destinations.find((destination) => destination.name === evt.target.value).id
-      }
-    });
-  };
-
-  #priceChangeHandler = (evt) => {
-    this.updateElement({routePoint: {...this._state.routePoint, price: evt.target.value}});
-  };
-
-  #offerChangeHandler = (evt) => {
-    const checkedOffer = evt.target.dataset.id;
-    const newOffers = this._state.routePoint.offers.map((offer) => ({
-      ...offer,
-      checked: offer.id === checkedOffer ? !offer.checked : offer.checked
-    }));
-    this.updateElement({
-      routePoint: {
-        ...this._state.routePoint,
-        offers: newOffers
-      }
-    });
-  };
-
-  #startTimeChangeHandler = (selectedDates) => {
-    this.updateElement({routePoint: {...this._state.routePoint, timeFrom: selectedDates[0]}});
-    this.#endTime.set('minDate', selectedDates[0]);
-  };
-
-  #endTimeChangeHandler = (selectedDates) => {
-    this.updateElement({routePoint: {...this._state.routePoint, timeTo: selectedDates[0]}});
-  };
 
   _restoreHandlers() {
     this.setSubmitHandler(this._callback.submit);
@@ -120,4 +65,62 @@ export default class EditFormView extends AbstractStatefulView {
     this.#endTime.destroy();
     this.#startTime.destroy();
   }
+
+
+  setSubmitHandler(handler) {
+    this._callback.submit = handler;
+    this.element.querySelector('form').addEventListener('submit', this._callback.submit);
+  }
+
+  setClickHandler(handler) {
+    this._callback.click = handler;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this._callback.click);
+  }
+
+  setDeleteClickHandler(handler) {
+    this._callback.deleteClick = handler;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this._callback.deleteClick);
+  }
+
+  #typeChangeHandler = (evt) => {
+    const type = evt.target.value;
+    this.updateElement({routePoint: {...this._state.routePoint, type: type, offers: this.#offers}});
+  };
+
+  #destinationChangeHandler = (evt) => {
+    this.updateElement({
+      routePoint: {
+        ...this._state.routePoint,
+        destination: this.#destinations.find((destination) => destination.name === evt.target.value).id,
+      }
+    });
+  };
+
+  #priceChangeHandler = (evt) => {
+    this.updateElement({routePoint: {...this._state.routePoint, price: evt.target.value}});
+  };
+
+  #offerChangeHandler = (evt) => {
+    const offer = evt.target.dataset.id;
+    const newOffers = this._state.routePoint.offers.includes(offer)
+      ? this._state.routePoint.offers.filter((o) => o !== offer)
+      : [...this._state.routePoint.offers, offer];
+    this.updateElement({
+      routePoint: {
+        ...this._state.routePoint,
+        offers: newOffers
+      }
+    });
+  };
+
+  #startTimeChangeHandler = (selectedDates) => {
+    this.updateElement({routePoint: {...this._state.routePoint, timeFrom: selectedDates[0]}});
+    this.#endTime.set('minDate', selectedDates[0]);
+  };
+
+  #endTimeChangeHandler = (selectedDates) => {
+    this.updateElement({routePoint: {...this._state.routePoint, timeTo: selectedDates[0]}});
+  };
+
+
 }
