@@ -80,7 +80,7 @@ export default class TripPresenter {
         this.#initPoints();
         break;
       case ModelEvent.ADD:
-        this.#pointPresenters.get(data.id).init(data);
+        this.#initPoints();
         break;
       case ModelEvent.INIT:
         this.#isLoading = false;

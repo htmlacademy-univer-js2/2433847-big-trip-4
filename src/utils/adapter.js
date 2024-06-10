@@ -2,10 +2,12 @@ function adaptToServer(point) {
   const adaptedPoint = {
     ...point,
     'base_price': parseInt(point.price, 10),
-    'date_from': new Date(point.timeFrom),
-    'date_to': new Date(point.timeTo),
+    'date_from': new Date(point.timeFrom).toISOString(),
+    'date_to': new Date(point.timeTo).toISOString(),
     'is_favorite': point.favorite,
+    'type': point.type.toLowerCase(),
   };
+  delete adaptedPoint.id;
   delete adaptedPoint.price;
   delete adaptedPoint.timeFrom;
   delete adaptedPoint.timeTo;
