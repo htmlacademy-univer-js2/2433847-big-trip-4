@@ -9,13 +9,15 @@ export const POINT_EMPTY = {
     description: '',
     pictures: [],
   },
-  price: 0,
+  price: 100,
   timeFrom: new Date(),
-  timeTo: new Date(),
+  timeTo: new Date(new Date().setDate(new Date().getDate() + 1)),
 };
 
 export const AUTHORIZATION = 'Basic pojsdfxhvpsijfbn';
-export const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
+export const ENDPOINT = 'https://21.objects.htmlacademy.pro/big-trip';
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const FilterType = {
   EVERYTHING: 'Everything',

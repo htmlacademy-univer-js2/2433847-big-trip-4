@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {emptyRouteTemplate} from '../template/emptyRouteTemplate';
+import {emptyRouteTemplate} from '../template/empty-route-template';
 
 
 export default class EmptyRouteView extends AbstractView {

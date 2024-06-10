@@ -1,6 +1,6 @@
 export const editFormTemplate = (routePoint, destinations, offers) => {
   const destination = destinations.find((d) => d.id === routePoint.destination);
-  const pointOffers = offers.find((o) => o.type === routePoint.type)?.offers ?? [];
+  const pointOffers = offers.find((o) => o.type === routePoint.type.toLowerCase())?.offers ?? [];
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
           <header class="event__header">
@@ -77,7 +77,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                   <label class="event__label  event__type-output" for="event-destination-1">
                       ${routePoint.type}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text"
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" required="required"
                          name="event-destination" value="${destination?.name ?? ''}" list="destination-list-1">
                   <datalist id="destination-list-1">
                       ${destinations.map((d) => `<option value="${d.name}"></option>`).join('')}
@@ -97,7 +97,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price"
+                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" required="required"
                          value="${routePoint.price}">
               </div>
 
@@ -111,14 +111,14 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
               <section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
-                      ${pointOffers.map((option) => `
+                      ${pointOffers.map((offer) => `
                         <div class="event__offer-selector">
-                            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.id}" type="checkbox"
-                            data-id="${option.id}" name="event-offer-${option.id}" ${option.checked ? 'checked' : ''}>
-                            <label class="event__offer-label" for="event-offer-${option.id}">
-                                <span class="event__offer-title">${option.title}</span>
+                            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox"
+                            data-id="${offer.id}" name="event-offer-${offer.id}" ${routePoint.offers.includes(offer.id) ? 'checked' : ''}>
+                            <label class="event__offer-label" for="event-offer-${offer.id}">
+                                <span class="event__offer-title">${offer.title}</span>
                                 &plus;&euro;&nbsp;
-                                <span class="event__offer-price">${option.price}</span>
+                                <span class="event__offer-price">${offer.price}</span>
                             </label>
                         </div>`).join('')}
                   </div>

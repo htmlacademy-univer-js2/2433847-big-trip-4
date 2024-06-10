@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {filterViewTemplate} from '../template/filterViewTemplate';
+import {filterViewTemplate} from '../template/filter-view-template';
 
 export default class FilterView extends AbstractView {
   constructor() {
@@ -11,6 +11,13 @@ export default class FilterView extends AbstractView {
       evt.preventDefault();
       callback(evt.target.value);
     });
+  }
+
+  toggleFilter(filterType, isDisabled) {
+    const filterElement = this.element.querySelector(`#filter-${filterType.toLowerCase()}`);
+    if (filterElement) {
+      filterElement.disabled = isDisabled;
+    }
   }
 
   get template() {

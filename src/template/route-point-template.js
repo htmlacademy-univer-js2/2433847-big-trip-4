@@ -15,7 +15,7 @@ function createOfferListItems(pointOffers, routePoint) {
 
 export const routePointTemplate = (routePoint, destinations, offers) => {
   const destination = destinations.find((d) => d.id === routePoint.destination);
-  const pointOffers = offers.find((o) => o.type === routePoint.type)?.offers ?? null
+  const pointOffers = offers.find((o) => o.type === routePoint.type)?.offers ?? null;
   return `<li class="trip-events__item">
       <div class="event">
           <time class="event__date" datetime=${routePoint.timeFrom}>${getFormattedDay(routePoint.timeFrom)}</time>

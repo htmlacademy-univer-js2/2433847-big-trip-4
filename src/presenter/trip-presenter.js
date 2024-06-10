@@ -1,19 +1,27 @@
-import PointPresenter from './pointPresenter';
+import PointPresenter from './point-presenter';
 import {remove, render} from '../framework/render';
-import EmptyRouteView from '../view/emptyRouteView';
-import SorterView from '../view/sorterView';
-import TripView from '../view/tripView';
+import EmptyRouteView from '../view/empty-route-view';
+import SorterView from '../view/sorter-view';
+import TripView from '../view/trip-view';
 import {ModelEvent, POINT_EMPTY, SortType, UserAction} from '../const';
 import {sort} from '../utils/sort';
 import {filter} from '../utils/filter';
-import LoadingView from '../view/loadingView';
+import LoadingView from '../view/loading-view';
 
 export default class TripPresenter {
+  #currentSortType = SortType.DAY;
   #container;
   #route;
   #filter;
   #destinationModel;
   #offersModel;
+  #pointPresenters = new Map();
+  #tripView = new TripView();
+  #sorterView = new SorterView();
+  #loadingView = new LoadingView();
+  #isLoading = true;
+  #noPointsBanner;
+  #createNewPointPresenter;
 
   constructor(container, route, filterModel, destinationModel, offersModel) {
     this.#container = container;
@@ -27,14 +35,6 @@ export default class TripPresenter {
     this.#route.addObserver(this.#handleModelEvent);
   }
 
-  #pointPresenters = new Map();
-  #tripView = new TripView();
-  #sorterView = new SorterView();
-  #loadingView = new LoadingView();
-  #isLoading = true;
-  #currentSortType = SortType.DAY;
-  #noPointsBanner;
-  #createNewPointPresenter;
 
   init() {
     this.#sorterView.setSortTypeChangeHandler(this.#handleSortTypeChange.bind(this));
@@ -80,7 +80,7 @@ export default class TripPresenter {
         this.#initPoints();
         break;
       case ModelEvent.ADD:
-        this.#pointPresenters.get(data.id).init(data);
+        this.#initPoints();
         break;
       case ModelEvent.INIT:
         this.#isLoading = false;
@@ -122,17 +122,21 @@ export default class TripPresenter {
   #handlePointChange = (actionType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#route.updatePoint(update);
-        break;
+        return this.#route.updatePoint(update);
       case UserAction.ADD_POINT:
-        this.#createNewPointPresenter.destroy();
-        this.#createNewPointPresenter = null;
-        this.#route.addPoint(update);
-        this.#initPoints();
-        break;
+        return this.#route.addPoint(update).then(() => {
+          this.#createNewPointPresenter.destroy();
+          this.#createNewPointPresenter = null;
+          this.#initPoints();
+        });
       case UserAction.DELETE_POINT:
-        this.#route.deletePoint(update.id);
-        break;
+        return this.#route.deletePoint(update.id).then(
+          () => {
+            if (this.#route.getPoints().length === 0) {
+              this.#initPoints();
+            }
+          }
+        );
     }
   };
 

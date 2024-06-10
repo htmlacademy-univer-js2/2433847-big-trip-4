@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {TripInfoTemplate} from '../template/tripInfoTemplate';
+import {TripInfoTemplate} from '../template/trip-info-template';
 
 
 export default class TripInfoView extends AbstractView {

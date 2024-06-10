@@ -1,6 +1,6 @@
-import PointView from '../view/routePointView';
+import PointView from '../view/route-point-view';
 import {remove, render, replace} from '../framework/render';
-import EditFormView from '../view/editFormView';
+import EditFormView from '../view/edit-form-view';
 import {POINT_EMPTY, UserAction} from '../const';
 
 export default class PointPresenter {
@@ -32,13 +32,14 @@ export default class PointPresenter {
     this.#point = point;
     if (this.#isNewPoint) {
       this.#point = POINT_EMPTY;
+      document.addEventListener('keydown', this.#handleEscKeyDown);
     } else {
       this.#pointView = new PointView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
       this.#pointView.setClickHandler(this.#handlePointClick.bind(this));
       this.#pointView.setFavoriteClickHandler(this.#handleFavoriteClick.bind(this));
     }
 
-    this.#editFormView = new EditFormView(this.#point, this.#destinationModel.destinations, this.#offersModel.offers);
+    this.#editFormView = new EditFormView(this.#destinationModel.destinations, this.#offersModel.offers, this.#point);
     this.#editFormView.setClickHandler(this.#handlePointClick.bind(this));
     this.#editFormView.setSubmitHandler(this.#handleSubmitClick.bind(this));
     this.#editFormView.setDeleteClickHandler(this.#handleDeleteClick.bind(this));
@@ -63,6 +64,8 @@ export default class PointPresenter {
       this.#currentView = this.#pointView;
       if (this.#isNewPoint) {
         this.#resetViewsCallback();
+        this.destroy();
+        return;
       }
       this.#editFormView.resetFields();
       replace(this.#currentView, this.#editFormView);
@@ -89,14 +92,26 @@ export default class PointPresenter {
 
   #handleSubmitClick(event) {
     event.preventDefault();
-    this.#changeDataCallback(this.#isNewPoint ? UserAction.ADD_POINT : UserAction.UPDATE_POINT, this.#editFormView._state.routePoint);
+    this.#editFormView.setSaving();
+    this.#changeDataCallback(this.#isNewPoint ? UserAction.ADD_POINT : UserAction.UPDATE_POINT, this.#editFormView._state.routePoint)
+      .then(() => {
+        this.#editFormView.setSaved();
+      })
+      .catch(() => {
+        this.#editFormView.setAborted();
+      });
   }
 
   #handleDeleteClick() {
+    this.#editFormView.setDeleting();
     if (this.#isNewPoint) {
       this.#resetViewsCallback();
     } else {
-      this.#changeDataCallback(UserAction.DELETE_POINT, this.#point);
+      this.#changeDataCallback(UserAction.DELETE_POINT, this.#point)
+        .catch(() => {
+          this.#editFormView.setAborted();
+        }
+        );
     }
   }
 

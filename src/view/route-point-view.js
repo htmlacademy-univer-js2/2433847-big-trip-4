@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import {routePointTemplate} from '../template/routePointTemplate';
+import {routePointTemplate} from '../template/route-point-template';
 
 
 export default class RoutePointView extends AbstractView {
