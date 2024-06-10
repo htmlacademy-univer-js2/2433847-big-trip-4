@@ -125,25 +125,25 @@ export default class EditFormView extends AbstractStatefulView {
   setSaving() {
     this.element.querySelector('.event__save-btn').textContent = 'Saving...';
     this.element.querySelector('.event__reset-btn').textContent = 'Deleting...';
-    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = true);
+    this.element.querySelectorAll('input, button').forEach((element) => { element.disabled = true; });
   }
 
   setSaved() {
     this.element.querySelector('.event__save-btn').textContent = 'Save';
     this.element.querySelector('.event__reset-btn').textContent = 'Delete';
-    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = false);
+    this.element.querySelectorAll('input, button').forEach((element) => { element.disabled = false; });
   }
 
   setDeleting() {
     this.element.querySelector('.event__reset-btn').textContent = 'Deleting...';
-    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = true);
+    this.element.querySelectorAll('input, button').forEach((element) => { element.disabled = true; });
   }
 
   setAborted() {
     this.element.classList.add('shake');
     this.element.querySelector('.event__save-btn').textContent = 'Save';
     this.element.querySelector('.event__reset-btn').textContent = 'Delete';
-    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = false);
+    this.element.querySelectorAll('input, button').forEach((element) => { element.disabled = false; });
 
     setTimeout(() => {
       this.element.classList.remove('shake');

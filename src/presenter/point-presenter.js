@@ -109,8 +109,8 @@ export default class PointPresenter {
     } else {
       this.#changeDataCallback(UserAction.DELETE_POINT, this.#point)
         .catch(() => {
-            this.#editFormView.setAborted();
-          }
+          this.#editFormView.setAborted();
+        }
         );
     }
   }
