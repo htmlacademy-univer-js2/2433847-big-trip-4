@@ -11,7 +11,7 @@ export const POINT_EMPTY = {
   },
   price: 100,
   timeFrom: new Date(),
-  timeTo: new Date(),
+  timeTo: new Date(new Date().setDate(new Date().getDate() + 1)),
 };
 
 export const AUTHORIZATION = 'Basic pojsdfxhvpsijfbn';

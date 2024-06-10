@@ -13,6 +13,13 @@ export default class FilterView extends AbstractView {
     });
   }
 
+  toggleFilter(filterType, isDisabled) {
+    const filterElement = this.element.querySelector(`#filter-${filterType.toLowerCase()}`);
+    if (filterElement) {
+      filterElement.disabled = isDisabled;
+    }
+  }
+
   get template() {
     return filterViewTemplate;
   }

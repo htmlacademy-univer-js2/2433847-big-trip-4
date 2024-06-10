@@ -23,7 +23,7 @@ const routeModel = new RouteModel({
 
 const filterModel = new Filter();
 const tripPresenter = new TripPresenter(tripEvents, routeModel, filterModel, destinationModel, offersModel);
-const filterPresenter = new FilterPresenter(tripFilters, filterModel);
+const filterPresenter = new FilterPresenter(tripFilters, filterModel, routeModel);
 const tripInfoPresenter = new TripInfoPresenter(header, routeModel, destinationModel);
 
 filterPresenter.init();

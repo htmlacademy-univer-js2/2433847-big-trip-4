@@ -125,10 +125,11 @@ export default class TripPresenter {
         this.#route.updatePoint(update);
         break;
       case UserAction.ADD_POINT:
-        this.#createNewPointPresenter.destroy();
-        this.#createNewPointPresenter = null;
-        this.#route.addPoint(update);
-        this.#initPoints();
+        this.#route.addPoint(update).then(() => {
+          this.#createNewPointPresenter.destroy();
+          this.#createNewPointPresenter = null;
+          this.#initPoints();
+        });
         break;
       case UserAction.DELETE_POINT:
         this.#route.deletePoint(update.id).then(

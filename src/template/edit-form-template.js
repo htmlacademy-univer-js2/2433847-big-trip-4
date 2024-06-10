@@ -77,7 +77,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                   <label class="event__label  event__type-output" for="event-destination-1">
                       ${routePoint.type}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text"
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" required="required"
                          name="event-destination" value="${destination?.name ?? ''}" list="destination-list-1">
                   <datalist id="destination-list-1">
                       ${destinations.map((d) => `<option value="${d.name}"></option>`).join('')}
@@ -97,7 +97,7 @@ export const editFormTemplate = (routePoint, destinations, offers) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price"
+                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" required="required"
                          value="${routePoint.price}">
               </div>
 
