@@ -122,24 +122,21 @@ export default class TripPresenter {
   #handlePointChange = (actionType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#route.updatePoint(update);
-        break;
+        return this.#route.updatePoint(update);
       case UserAction.ADD_POINT:
-        this.#route.addPoint(update).then(() => {
+        return this.#route.addPoint(update).then(() => {
           this.#createNewPointPresenter.destroy();
           this.#createNewPointPresenter = null;
           this.#initPoints();
         });
-        break;
       case UserAction.DELETE_POINT:
-        this.#route.deletePoint(update.id).then(
+        return this.#route.deletePoint(update.id).then(
           () => {
             if (this.#route.getPoints().length === 0) {
               this.#initPoints();
             }
           }
         );
-        break;
     }
   };
 

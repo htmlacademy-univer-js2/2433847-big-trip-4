@@ -92,14 +92,26 @@ export default class PointPresenter {
 
   #handleSubmitClick(event) {
     event.preventDefault();
-    this.#changeDataCallback(this.#isNewPoint ? UserAction.ADD_POINT : UserAction.UPDATE_POINT, this.#editFormView._state.routePoint);
+    this.#editFormView.setSaving();
+    this.#changeDataCallback(this.#isNewPoint ? UserAction.ADD_POINT : UserAction.UPDATE_POINT, this.#editFormView._state.routePoint)
+      .then(() => {
+        this.#editFormView.setSaved();
+      })
+      .catch(() => {
+        this.#editFormView.setAborted();
+      });
   }
 
   #handleDeleteClick() {
+    this.#editFormView.setDeleting();
     if (this.#isNewPoint) {
       this.#resetViewsCallback();
     } else {
-      this.#changeDataCallback(UserAction.DELETE_POINT, this.#point);
+      this.#changeDataCallback(UserAction.DELETE_POINT, this.#point)
+        .catch(() => {
+            this.#editFormView.setAborted();
+          }
+        );
     }
   }
 

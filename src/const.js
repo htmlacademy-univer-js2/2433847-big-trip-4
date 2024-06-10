@@ -17,6 +17,8 @@ export const POINT_EMPTY = {
 export const AUTHORIZATION = 'Basic pojsdfxhvpsijfbn';
 export const ENDPOINT = 'https://21.objects.htmlacademy.pro/big-trip';
 
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const FilterType = {
   EVERYTHING: 'Everything',
   FUTURE: 'Future',

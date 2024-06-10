@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import {POINT_EMPTY} from '../const';
+import {POINT_EMPTY, SHAKE_ANIMATION_TIMEOUT} from '../const';
 import {editFormTemplate} from '../template/edit-form-template';
 import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
@@ -121,6 +121,34 @@ export default class EditFormView extends AbstractStatefulView {
   #endTimeChangeHandler = (selectedDates) => {
     this.updateElement({routePoint: {...this._state.routePoint, timeTo: selectedDates[0]}});
   };
+
+  setSaving() {
+    this.element.querySelector('.event__save-btn').textContent = 'Saving...';
+    this.element.querySelector('.event__reset-btn').textContent = 'Deleting...';
+    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = true);
+  }
+
+  setSaved() {
+    this.element.querySelector('.event__save-btn').textContent = 'Save';
+    this.element.querySelector('.event__reset-btn').textContent = 'Delete';
+    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = false);
+  }
+
+  setDeleting() {
+    this.element.querySelector('.event__reset-btn').textContent = 'Deleting...';
+    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = true);
+  }
+
+  setAborted() {
+    this.element.classList.add('shake');
+    this.element.querySelector('.event__save-btn').textContent = 'Save';
+    this.element.querySelector('.event__reset-btn').textContent = 'Delete';
+    this.element.querySelectorAll('input, button').forEach((element) => element.disabled = false);
+
+    setTimeout(() => {
+      this.element.classList.remove('shake');
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
 
 
 }
