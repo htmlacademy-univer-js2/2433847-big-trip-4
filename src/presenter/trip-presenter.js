@@ -132,7 +132,7 @@ export default class TripPresenter {
       case UserAction.DELETE_POINT:
         return this.#route.deletePoint(update.id).then(
           () => {
-            if (this.#route.getPoints().length === 0) {
+            if (this.#filterPoints(this.#route.getPoints()).length === 0) {
               this.#initPoints();
             }
           }
