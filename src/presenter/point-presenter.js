@@ -52,12 +52,6 @@ export default class PointPresenter {
     editFormView?.removeElement();
   }
 
-  #handleEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      this.resetView();
-    }
-  };
-
   resetView() {
     if (this.#currentView instanceof EditFormView) {
       document.removeEventListener('keydown', this.#handleEscKeyDown);
@@ -71,6 +65,21 @@ export default class PointPresenter {
       replace(this.#currentView, this.#editFormView);
     }
   }
+
+  destroy() {
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
+    remove(this.#editFormView);
+    if (this.#pointView) {
+      remove(this.#pointView);
+    }
+  }
+
+  #handleEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      this.resetView();
+    }
+  };
+
 
   #handleFavoriteClick() {
     this.#changeDataCallback(UserAction.UPDATE_POINT, {
@@ -110,16 +119,7 @@ export default class PointPresenter {
       this.#changeDataCallback(UserAction.DELETE_POINT, this.#point)
         .catch(() => {
           this.#editFormView.setAborted();
-        }
-        );
-    }
-  }
-
-  destroy() {
-    document.removeEventListener('keydown', this.#handleEscKeyDown);
-    remove(this.#editFormView);
-    if (this.#pointView) {
-      remove(this.#pointView);
+        });
     }
   }
 }
